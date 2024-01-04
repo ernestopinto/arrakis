@@ -42,8 +42,8 @@ function signalUser() {
         <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" v-model.number="form.age" type="number" id="age" min="0" required/>
       </div>
       <div class="flex items-center justify-between">
-        <button type="button" @click="signalUser()" class="text-blue-500 hover:text-blue-600 underline cursor-pointer">
-          Action
+        <button type="button" @click="signalUser()"class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          Click me
         </button>
       </div>
     </form>
@@ -76,8 +76,9 @@ function signalUser() {
       </tbody>
     </table>
     <br/>
-    <nested :message="'Lista de Adultos:'" :lista="filteredLista()"></nested>
+    <div style="border-bottom-style: dashed; padding: 5px; border-bottom-width: thin">
+      <nested :message="'Lista de Adultos:'" :lista="filteredLista()"></nested>
+    </div>
   </div>
-
 </template>
 
