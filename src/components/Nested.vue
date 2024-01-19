@@ -1,6 +1,25 @@
 <script setup lang="ts">
 
-const props = defineProps(['message', 'lista'])
+// nested - parent
+
+import {ref} from "vue";
+
+const props = defineProps({
+  message: String,
+  lista: Array
+})
+
+// defaults to null
+const channel = ref(null);
+
+const emit = defineEmits(['rowUpdating']);
+
+function sendUserToParent(row){
+  console.log('sending -> ', row);
+  emit('rowUpdating',{row, channel: channel.value});
+}
+
+//
 
 </script>
 
@@ -25,7 +44,7 @@ const props = defineProps(['message', 'lista'])
       </td>
       <td class="px-4 py-3 text-sm">{{ user['age'] }}</td>
       <td class="px-4 py-3 text-sm">
-        <button class="text-blue-500 hover:text-blue-600 underline cursor-pointer">
+        <button class="text-blue-500 hover:text-blue-600 underline cursor-pointer" @click="sendUserToParent(user)">
           Action
         </button>
       </td>
