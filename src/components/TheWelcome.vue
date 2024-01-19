@@ -2,12 +2,21 @@
 import { signal, computed } from '@/state/angular-signal';
 import Nested from "@/components/Nested.vue";
 
-const listaAlunos = signal([]);
-
 const form = {
   name: '',
   age: 18
 }
+
+const listaAlunos = signal([]);
+const errorsList = signal([]);
+
+const displayErrorName = computed(() => {
+  return errorsList().find((e: {field: string, message: string}) => (e.field == 'name'))?.message;
+});
+
+const displayErrorAge = computed(() => {
+  return errorsList().find((e: {field: string, message: string}) => (e.field == 'age'))?.message;
+});
 
 // only grown ups
 const filteredLista = computed(() => {
@@ -15,6 +24,35 @@ const filteredLista = computed(() => {
 })
 
 function signalUser() {
+  let fValid = true;
+  errorsList.set([]);
+
+  if (!form.name || form.name == ''){
+    errorsList.update(errors => ([...errors, {field: 'name', message: 'Name is required!'}]));
+    fValid = false;
+  }
+
+  if (form.age <= 5){
+    errorsList.update(errors => ([...errors, {field: 'age', message: 'That age is impossible!'}]));
+    fValid = false;
+  }
+
+  // console.log(errorsList());
+
+  if (!fValid){
+    return;
+  }
+
+  if (errorsList().some(error => (error.field == 'name'))){
+    // splice
+    errorsList().splice(errorsList().indexOf(errorsList().find(e => e.field == 'name')), 1);
+  }
+
+  if (errorsList().some(error => (error.field == 'age'))){
+    // splice
+    errorsList().splice(errorsList().indexOf(errorsList().find(e => e.field == 'age')), 1);
+  }
+
   const aluno = {
     name: form.name,
     age: form.age
@@ -22,7 +60,12 @@ function signalUser() {
   if (!listaAlunos().some((a: any) => (aluno.name.toLowerCase() == a.name.toLowerCase()))) {
     listaAlunos.update(listaUsers => ([...listaUsers, aluno]));
   }
+
 }
+
+///
+
+const getRowFromNested = (data) => console.log(data);
 
 </script>
 
@@ -34,12 +77,18 @@ function signalUser() {
           Name
         </label>
         <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" v-model="form.name" type="text" id="name" required/>
+        <p v-if="displayErrorName() && displayErrorName() != ''">
+          {{displayErrorName()}}
+        </p>
       </div>
       <div class="mb-6">
         <label class="block text-gray-700 text-sm font-bold mb-2" for="age">
           Age
         </label>
         <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" v-model.number="form.age" type="number" id="age" min="0" required/>
+        <p v-if="displayErrorAge() && displayErrorAge() != ''">
+          {{displayErrorAge()}}
+        </p>
       </div>
       <div class="flex items-center justify-between">
         <button type="button" @click="signalUser()"class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
@@ -77,7 +126,24 @@ function signalUser() {
     </table>
     <br/>
     <div style="border-bottom-style: dashed; padding: 5px; border-bottom-width: thin">
-      <nested :message="'Lista de Adultos:'" :lista="filteredLista()"></nested>
+      <nested :message="'Lista de Aderentes Adultos:'" :lista="filteredLista()" @rowUpdating="getRowFromNested"></nested>
+    </div>
+    <!-- code --->
+    <div>
+    <pre class="font-mono text-sm bg-gray-800 text-white p-2 rounded">
+      <code>
+        //..
+        //..
+        if (!form.name || form.name == ''){
+          errorsList.update(errors => ([...errors, {field: 'name', message: 'Name is required!'}]));
+          fValid = false;
+        }
+        //...
+       const displayErrorName = computed(() => {
+          return errorsList().find((e: {field: string, message: string}) => (e.field == 'name'))?.message;
+        });
+      </code>
+    </pre>
     </div>
   </div>
 </template>
