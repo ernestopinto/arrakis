@@ -16,6 +16,9 @@ const emit = defineEmits(['rowUpdating']);
 
 function sendUserToParent(row){
   console.log('sending -> ', row);
+  //
+  // always do this way
+  channel.value = row;
   emit('rowUpdating',{row, channel: channel.value});
 }
 
