@@ -4,7 +4,6 @@
 @import 'tailwindcss/utilities';
 
 #app {
-  max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   font-weight: normal;
@@ -26,7 +25,11 @@ a,
 
 
 form{
-  max-width: 350px;
+  width: 400px;
+}
+
+.code-demo{
+  padding-top: 30px;
 }
 
 @media (hover: hover) {

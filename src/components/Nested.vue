@@ -6,20 +6,23 @@ import {ref} from "vue";
 
 const props = defineProps({
   message: String,
-  lista: Array
+  lista: Array,
+  validOperations: Array
 })
+
+console.log(props.validOperations);
 
 // defaults to null
 const channel = ref(null);
 
 const emit = defineEmits(['rowUpdating']);
 
-function sendUserToParent(row){
+function sendUserToParent(row: any, codeOperation: number){
   console.log('sending -> ', row);
   //
   // always do this way
   channel.value = row;
-  emit('rowUpdating',{row, channel: channel.value});
+  emit('rowUpdating',{row, channel: channel.value, operation: codeOperation});
 }
 
 //
@@ -47,8 +50,8 @@ function sendUserToParent(row){
       </td>
       <td class="px-4 py-3 text-sm">{{ user['age'] }}</td>
       <td class="px-4 py-3 text-sm">
-        <button class="text-blue-500 hover:text-blue-600 underline cursor-pointer" @click="sendUserToParent(user)">
-          Action
+        <button class="text-blue-500 hover:text-blue-600 underline cursor-pointer" @click="sendUserToParent(user, 1)">
+          Action From Nested Element
         </button>
       </td>
     </tr>
